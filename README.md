@@ -114,9 +114,11 @@ python app.py
 
 ---
 
+**I will keep adding New Stuff related to this as i learn it**
+
 ### **👨‍💻 Author:** Utpal
-🔗 **GitHub:** [Your GitHub Link]  
-📧 **Email:** [Your Email]  
+🔗 **GitHub:** [[Your GitHub Link](https://github.com/UtpaL2102)]  
+📧 **Email:** [priyadarshiutpal06@gmail.com]  
 
 🚀 **Happy Coding!**
 
