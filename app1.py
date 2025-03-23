@@ -12,3 +12,5 @@ def index():                            # neeche wala bhi aajaega
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+    #  Run this file and go to http://
