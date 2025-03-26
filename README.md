@@ -1,6 +1,9 @@
-# Flask API - Beginner to Advanced 🚀
+# Flask API 
 
-Welcome to the **Flask API Repository**, a comprehensive guide from **beginner to advanced concepts** in Flask development. This repository covers everything from **basic Flask routing** to **handling API requests (GET & POST)**, using **templates**, and **creating dynamic web applications**.
+Welcome to the **Flask API Repository**, This contains My Flask Journey from **beginner stage** in Flask development. This repository covers everything from **basic Flask routing** to **handling API requests (GET & POST)**, using **templates**, and **creating dynamic web applications**.
+
+This repository is a **work in progress**, and I will keep adding more concepts and implementations as I progress in my Flask learning journey. Stay tuned for updates as I explore deeper into Flask development!
+
 
 ---
 
