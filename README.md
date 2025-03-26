@@ -1,45 +1,137 @@
-# Flask API and Frontend Demo
+# Flask API - Beginner to Advanced 🚀
 
-This repository contains a **Flask-based API** along with implementations for **calculating average marks**, **handling JSON data**, and **demonstrating REST API concepts**. Additionally, it includes **a frontend form**, API endpoints, and examples of how to test the APIs using **Postman**.
+Welcome to the **Flask API Repository**, a comprehensive guide from **beginner to advanced concepts** in Flask development. This repository covers everything from **basic Flask routing** to **handling API requests (GET & POST)**, using **templates**, and **creating dynamic web applications**.
 
 ---
 
-## **📌 Features Implemented**
+## 📌 **Table of Contents**
+1. [Introduction to Flask](#introduction-to-flask)
+2. [Basic Routing](#basic-routing)
+3. [Handling GET and POST Requests](#handling-get-and-post-requests)
+4. [Creating a Simple API](#creating-a-simple-api)
+5. [Using Variable Rules in Routes](#using-variable-rules-in-routes)
+6. [Form Handling & Templates](#form-handling--templates)
+7. [Testing APIs with Postman](#testing-apis-with-postman)
+8. [Comparison: Flask vs Streamlit/Gradio](#comparison-flask-vs-streamlitgradio)
+9. [Running the Project Locally](#running-the-project-locally)
+10. [Future Improvements](#future-improvements)
 
-### 1️⃣ **Flask Backend for Handling Form Data**
-- Users enter marks in **Maths, Science, and History**.
-- Flask processes the input and calculates the **average marks**.
-- Displays results on an HTML page using `render_template`.
+---
+
+## **📌 Introduction to Flask**
+Flask is a **lightweight and powerful web framework** for Python that allows developers to build **web applications and APIs** quickly. 
+
+- **Why Flask?**
+  - Easy to set up ✅
+  - Lightweight and minimalistic ✅
+  - Supports RESTful APIs ✅
+  - Scalable and production-ready ✅
+
+---
+
+## **📌 Basic Routing**
+Routing defines how Flask should respond to **different URLs**.
 
 📌 **File:** `app.py`
 ```python
-maths = float(request.form['maths'])
-science = float(request.form['science'])
-history = float(request.form['history'])
+from flask import Flask
+app = Flask(__name__)
 
-average_marks = (maths + science + history) / 3
-return render_template('form.html', score=average_marks)
+@app.route("/", methods=["GET"])
+def welcome():
+    return "Welcome to Krish Naik Hindi Channel"
+
+if __name__ == "__main__":
+    app.run(debug=True)
 ```
+✅ **Explanation:**
+- `@app.route("/")` → This defines a **root URL**.
+- `app.run(debug=True)` → Enables **debug mode**, which reloads the server when changes are made.
 
 ---
 
-### 2️⃣ **Creating a Flask API Endpoint (`/api`)**
-- Accepts **JSON input** with numbers `a` and `b`.
-- Returns their **sum** as a JSON response.
+## **📌 Handling GET and POST Requests**
+Flask supports **GET & POST methods** for handling different types of requests.
 
-📌 **File:** `app.py`
+📌 **File:** `Get-Post.py`
 ```python
+from flask import Flask, render_template, request
+app = Flask(__name__)
+
+@app.route('/form', methods=["GET", "POST"])
+def form():
+    if request.method == "POST":
+        maths = float(request.form['maths'])
+        science = float(request.form['science'])
+        history = float(request.form['history'])
+        average_marks = (maths + science + history) / 3
+        return render_template('form.html', score=average_marks)
+    return render_template('form.html', score=None)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+✅ **Explanation:**
+- `request.form["maths"]` → Fetching **user input from HTML form**.
+- `return render_template("form.html", score=average_marks)` → **Passing data** to an HTML template.
+
+📌 **Corresponding Template:** `templates/form.html`
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculate Average Marks</title>
+</head>
+<body>
+    <div class="calculate">
+        <h1>Calculate average marks</h1>
+
+        <!-- Main Input Form -->
+        <form action="{{ url_for('form') }}" method="post">
+            <input type="text" name="maths" placeholder="Maths" required="required" />
+            <input type="text" name="science" placeholder="Science" required="required" />
+            <input type="text" name="history" placeholder="History" required="required" />
+            <button type="submit" class="btn btn-primary btn-block btn-large">Calculate Button</button>
+        </form>
+
+        <br>
+        <!-- Display the calculated average marks -->
+        <p>The average marks is {{ score }}</p>
+        <br>
+    </div>
+</body>
+</html>
+```
+✅ **Explanation:**
+- `{{ url_for('form') }}` → Dynamically generates the URL for form submission.
+- `{{ score }}` → Displays the calculated average marks after submission.
+
+---
+
+## **📌 Creating a Simple API**
+Flask can be used to build APIs that return **JSON responses**.
+
+📌 **File:** `API.py`
+```python
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+
 @app.route('/api', methods=['POST'])
 def calculate_sum():
     data = request.get_json()
     a_val = float(data['a'])
     b_val = float(data['b'])
-    return jsonify(a_val + b_val)
-```
+    return jsonify(result=a_val + b_val)
 
-📌 **Test Using Postman:**
-- **Method:** `POST`
-- **URL:** `http://127.0.0.1:5000/api`
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+✅ **Explanation:**
+- `request.get_json()` → Parses **JSON input**.
+- `jsonify(result=a_val + b_val)` → Returns **JSON output**.
+
+📌 **Test API with Postman:**
+- **POST request to:** `http://127.0.0.1:5000/api`
 - **Body (JSON):**
 ```json
 {
@@ -51,74 +143,31 @@ def calculate_sum():
 
 ---
 
-### 3️⃣ **Testing the API in Postman vs Browser**
-- **POST requests** work in **Postman**, but trying to access `127.0.0.1:5000/api` in a browser gives `Method Not Allowed`.
-- This happens because browsers make **GET requests** by default, while this API **only accepts POST requests**.
-
-📌 **Solution:** Add support for `GET` if needed:
-```python
-@app.route('/api', methods=['GET', 'POST'])
-```
-
----
-
-### 4️⃣ **Frontend Form (`form.html`)**
-- HTML form to **input marks**.
-- Sends data to Flask for processing.
-
-📌 **File:** `templates/form.html`
-```html
-<form action="/" method="POST">
-    <input type="number" name="maths" placeholder="Maths Marks" required>
-    <input type="number" name="science" placeholder="Science Marks" required>
-    <input type="number" name="history" placeholder="History Marks" required>
-    <button type="submit">Submit</button>
-</form>
-```
-
----
-
-### 5️⃣ **Why Flask Instead of Streamlit/Gradio?**
-| Feature               | Streamlit / Gradio | Flask (or FastAPI) |
-|----------------------|-------------------|-------------------|
-| **Scalability**      | Limited to small projects | Handles multiple requests efficiently |
-| **API Control**      | Limited customization | Full control over API structure |
-| **Security**         | Basic | Advanced (JWT, OAuth, authentication) |
-| **Database Handling** | Not designed for it | Supports SQL & NoSQL databases |
-| **Background Processing** | Limited | Supports Celery for async jobs |
-
----
-
-## **🚀 Running the Project Locally**
-
-### **🔹 Step 1: Install Dependencies**
+## **📌 Running the Project Locally**
+1️⃣ **Install Dependencies:**
 ```bash
 pip install flask
 ```
-
-### **🔹 Step 2: Run the Flask App**
+2️⃣ **Run the Flask App:**
 ```bash
 python app.py
 ```
-
-### **🔹 Step 3: Open in Browser**
-- Form UI: `http://127.0.0.1:5000/`
-- API Endpoint (Test with Postman): `http://127.0.0.1:5000/api`
+3️⃣ **Access URLs:**
+- API: `http://127.0.0.1:5000/api`
+- Web UI: `http://127.0.0.1:5000/form`
 
 ---
 
 ## **📌 Future Improvements**
-✅ Add **JWT Authentication** to secure the API.  
-✅ Implement **Flask-SQLAlchemy** for database support.  
-✅ Use **Celery** for background task processing.  
+✅ Implement **JWT Authentication** for security.  
+✅ Integrate **Flask-SQLAlchemy** for database storage.  
+✅ Use **Celery** for background tasks.  
 
 ---
 
-**I will keep adding New Stuff related to this as i learn it**
-
-### **👨‍💻 Author:** Utpal
-🔗 **GitHub:** [[Your GitHub Link](https://github.com/UtpaL2102)]  
-📧 **Email:** [priyadarshiutpal06@gmail.com]  
+### **👨‍💻 Author:** Priyadarshi Utpal  
+🔗 **GitHub:** [Your GitHub Link]  
+📧 **Email:** [Your Email]  
 
 🚀 **Happy Coding!**
 
